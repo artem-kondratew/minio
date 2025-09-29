@@ -5,34 +5,11 @@ This project sets up MinIO via Docker Compose and automatically mounts a bucket 
 
 ---
 
-## Step 1: Generate Root Username and Password
+## Step 1: Install deps
 
-1. Switch to root:
-
-```bash
-sudo -i
-```
-
-2. Initialize pass for root:
 
 ```bash
-gpg --full-generate-key
-pass init "root (for minio)"
-```
-
-3. Create MinIO credentials:
-
-```bash
-pass insert minio/root_username
-pass insert minio/root_passwd
-```
-
-4. Verify credentials:
-
-```bash
-pass list
-pass show minio/root_username
-pass show minio/root_passwd
+sudo apt update -y && sudo apt install -y s3fs
 ```
 
 ## Step 2: Run the install script
@@ -67,8 +44,6 @@ The installer will:
 - Copy Docker Compose and systemd templates
 
 - Replace placeholders with actual paths
-
-- Install dependencies (s3fs)
 
 - Configure and start systemd services for MinIO and bucket mounting
 
