@@ -1,6 +1,7 @@
 #!/bin/bash
 
 
+# CHECKING ARGUMENTS
 if [[ $# -ne 1 ]]
 then
     echo "usage: bash install.sh <minio_mount_dir>"
@@ -10,9 +11,11 @@ fi
 # DOCKER & SYSTEMD TEMPLATES UPDATE
 MINIO_MOUNT_DIR=$1
 
-mkdir ./data
-mkdir -p $MINIO_MOUNT_DIR
+# CREATING DIRECTORIES
+[ ! -d ./data ] && mkdir ./data
+[ ! -d "$MINIO_MOUNT_DIR" ] && mkdir -p "$MINIO_MOUNT_DIR"
 
+# USING TEMPLATES
 cp docker-compose.yaml.template docker-compose.yaml
 cp minio-compose.service.template minio-compose.service
 cp minio-mount.service.template minio-mount.service
@@ -26,36 +29,9 @@ sed -i "s|{{MINIO_MOUNT_DIR}}|$MINIO_MOUNT_DIR|g" ./minio-mount.service
 sudo apt update -y
 sudo apt install -y s3fs
 
-# MINIO PASSWD SETUP
-while true; do
-    read -p "Enter MinIO root username (>= 3 chars): " MINIO_ROOT_USER
-    if [[ ${#MINIO_ROOT_USER} -lt 3 ]]; then
-        echo "Error: username must be at least 3 characters long."
-    else
-        break
-    fi
-done
-
-while true; do
-    read -s -p "Enter MinIO root password (>= 8 chars): " MINIO_ROOT_PASSWORD
-    echo
-    if [[ ${#MINIO_ROOT_PASSWORD} -lt 8 ]]; then
-        echo "Error: password must be at least 8 characters long."
-    else
-        break
-    fi
-done
-
-touch .env
-echo "MINIO_ROOT_USER=$MINIO_ROOT_USER" > .env
-echo "MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD" >> .env
-
-# MINIO MOUNT SERVICE PREPARING
-touch .minio_pass
-echo "$MINIO_ROOT_USER:$MINIO_ROOT_PASSWORD" > .minio_pass
-chmod 600 .minio_pass
-
 # SYSTEMD CONFIGURATION
+chmod +x ./minio_mount.sh
+
 sudo mv ./minio-compose.service /etc/systemd/system/
 sudo mv ./minio-mount.service /etc/systemd/system/
 

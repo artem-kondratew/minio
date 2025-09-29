@@ -5,17 +5,12 @@ After=minio-compose.service network-online.target
 
 [Service]
 Type=simple
-ExecStartPre=/bin/bash -c 'until docker exec minio mc alias set local http://127.0.0.1:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD; do sleep 1; done'
-ExecStart=/usr/bin/s3fs data {{MINIO_MOUNT_DIR}} \
-    -f -o passwd_file={{MINIO_DIR}}/.minio_pass \
-    -o url=http://127.0.0.1:9000 \
-    -o use_path_request_style \
-    -o nonempty \
-    -o allow_other
+Environment=GNUPGHOME=/root/.gnupg
+ExecStart={{MINIO_DIR}}/minio_mount.sh {{MINIO_MOUNT_DIR}}
 ExecStop=/bin/fusermount -u {{MINIO_MOUNT_DIR}}
 Restart=on-failure
-User=user
-Group=user
+User=root
+Group=root
 
 [Install]
 WantedBy=multi-user.target
