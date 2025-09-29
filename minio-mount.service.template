@@ -1,7 +1,7 @@
 [Unit]
 Description=Mount MinIO bucket via s3fs
-Requires=minio_compose.service
-After=minio_compose.service network-online.target
+Requires=minio-compose.service
+After=minio-compose.service network-online.target
 
 [Service]
 Type=simple

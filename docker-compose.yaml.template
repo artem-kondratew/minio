@@ -10,7 +10,7 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: server /data --console-address ":9001"
     volumes:
-      - /home/user/minio/data:/data
+      - {{MINIO_DATA_DIR}}:/data
     networks:
       vpn-net: {}
 

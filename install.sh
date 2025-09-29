@@ -11,14 +11,16 @@ fi
 MINIO_MOUNT_DIR=$1
 
 mkdir ./data
+mkdir -p $MINIO_MOUNT_DIR
 
-cp minio_compose.service.template minio_compose.service
-cp minio_mount.service.template minio_mount.service
+cp docker-compose.yaml.template docker-compose.yaml
+cp minio-compose.service.template minio-compose.service
+cp minio-mount.service.template minio-mount.service
 
 sed -i "s|{{MINIO_DATA_DIR}}|$PWD/data|g" ./docker-compose.yaml
-sed -i "s|{{MINIO_DIR}}|$PWD|g" ./minio_compose.service
-sed -i "s|{{MINIO_DIR}}|$PWD|g" ./minio_mount.service
-sed -i "s|{{MINIO_MOUNT_DIR}}|$MINIO_MOUNT_DIR|g" ./minio_mount.service
+sed -i "s|{{MINIO_DIR}}|$PWD|g" ./minio-compose.service
+sed -i "s|{{MINIO_DIR}}|$PWD|g" ./minio-mount.service
+sed -i "s|{{MINIO_MOUNT_DIR}}|$MINIO_MOUNT_DIR|g" ./minio-mount.service
 
 # DEPS INSTALLATION
 sudo apt update -y
@@ -54,14 +56,16 @@ echo "$MINIO_ROOT_USER:$MINIO_ROOT_PASSWORD" > .minio_pass
 chmod 600 .minio_pass
 
 # SYSTEMD CONFIGURATION
-sudo mv ./minio_compose.service /etc/systemd/system/
-sudo mv ./minio_mount.service /etc/systemd/system/
+sudo mv ./minio-compose.service /etc/systemd/system/
+sudo mv ./minio-mount.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
 
-sudo systemctl enable --now minio_compose.service
-sudo systemctl enable --now minio_mount.service
+sudo systemctl enable --now minio-compose.service
+sudo systemctl enable --now minio-mount.service
 
 # SAVING MINIO MOUNT DIR PATH
 touch minio_mount_dir.txt
 echo $MINIO_MOUNT_DIR > minio_mount_dir.txt
+
+rm -rf docker-compose.yaml
