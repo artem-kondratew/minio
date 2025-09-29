@@ -10,7 +10,7 @@ This project sets up MinIO via Docker Compose and automatically mounts a bucket 
 1. Switch to root:
 
 ```bash
-bash sudo -i
+sudo -i
 ```
 
 2. Initialize pass for root:
