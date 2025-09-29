@@ -44,13 +44,9 @@ while true; do
     fi
 done
 
-MINIO_ROOT_USER=bleb
-MINIO_ROOT_PASSWORD=12345678
-
 touch .env
 echo "MINIO_ROOT_USER=$MINIO_ROOT_USER" > .env
 echo "MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD" >> .env
-echo
 
 # MINIO MOUNT SERVICE PREPARING
 touch .minio_pass
@@ -65,3 +61,7 @@ sudo systemctl daemon-reload
 
 sudo systemctl enable --now minio_compose.service
 sudo systemctl enable --now minio_mount.service
+
+# SAVING MINIO MOUNT DIR PATH
+touch minio_mount_dir.txt
+echo $MINIO_MOUNT_DIR > minio_mount_dir.txt
