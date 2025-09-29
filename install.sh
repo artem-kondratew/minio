@@ -36,7 +36,7 @@ echo "MINIO_ROOT_USER=$MINIO_ROOT_USER" | sudo tee $CRED_FILE > /dev/null
 echo "MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD" | sudo tee -a $CRED_FILE > /dev/null
 sudo chmod 600 $CRED_FILE
 
-# Save credentials for s3fs
+# SAVE CREDENTIALS
 CRED_FILE_MOUNT="$PWD/.minio_credentials_mount"
 echo "$MINIO_ROOT_USER:$MINIO_ROOT_PASSWORD" | sudo tee $CRED_FILE_MOUNT > /dev/null
 sudo chmod 600 $CRED_FILE_MOUNT
