@@ -1,4 +1,2 @@
-.env
 data
-.minio_pass
 minio_mount_dir.txt
