@@ -24,9 +24,6 @@ sed -i "s|{{MINIO_DIR}}|$PWD|g" ./minio-compose.service
 sed -i "s|{{MINIO_DIR}}|$PWD|g" ./minio-mount.service
 sed -i "s|{{MINIO_MOUNT_DIR}}|$MINIO_MOUNT_DIR|g" ./minio-mount.service
 
-# DEPS INSTALLATION
-
-
 # GENERATE ROOT CREDENTIALS
 echo "Enter MinIO root username:"
 read MINIO_ROOT_USER
