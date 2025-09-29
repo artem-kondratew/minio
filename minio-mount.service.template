@@ -1,14 +1,18 @@
 [Unit]
 Description=Mount MinIO bucket via s3fs
+After=minio-compose.service
 Requires=minio-compose.service
-After=minio-compose.service network-online.target
 
 [Service]
 Type=simple
-Environment=GNUPGHOME=/root/.gnupg
-ExecStart={{MINIO_DIR}}/minio_mount.sh {{MINIO_MOUNT_DIR}}
-ExecStop=/bin/fusermount -u {{MINIO_MOUNT_DIR}}
-Restart=on-failure
+ExecStart=/usr/bin/s3fs data {{MINIO_MOUNT_DIR}} \
+    -f \
+    -o url=http://127.0.0.1:9000 \
+    -o use_path_request_style \
+    -o allow_other \
+    -o nonempty \
+    -o passwd_file={{MINIO_DIR}}/.minio_credentials_mount
+RemainAfterExit=yes
 User=root
 Group=root
 

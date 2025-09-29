@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # CHECKING ARGUMENTS
 if [[ $# -ne 1 ]]
 then
@@ -26,22 +25,33 @@ sed -i "s|{{MINIO_DIR}}|$PWD|g" ./minio-mount.service
 sed -i "s|{{MINIO_MOUNT_DIR}}|$MINIO_MOUNT_DIR|g" ./minio-mount.service
 
 # DEPS INSTALLATION
-sudo apt update -y
-sudo apt install -y s3fs
+
+
+# GENERATE ROOT CREDENTIALS
+echo "Enter MinIO root username:"
+read MINIO_ROOT_USER
+echo "Enter MinIO root password:"
+read -s MINIO_ROOT_PASSWORD
+
+# SAVE CREDENTIALS
+CRED_FILE="$PWD/.minio_credentials"
+echo "MINIO_ROOT_USER=$MINIO_ROOT_USER" | sudo tee $CRED_FILE > /dev/null
+echo "MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD" | sudo tee -a $CRED_FILE > /dev/null
+sudo chmod 600 $CRED_FILE
+
+# Save credentials for s3fs
+CRED_FILE_MOUNT="$PWD/.minio_credentials_mount"
+echo "$MINIO_ROOT_USER:$MINIO_ROOT_PASSWORD" | sudo tee $CRED_FILE_MOUNT > /dev/null
+sudo chmod 600 $CRED_FILE_MOUNT
 
 # SYSTEMD CONFIGURATION
-chmod +x ./minio_mount.sh
-
 sudo mv ./minio-compose.service /etc/systemd/system/
 sudo mv ./minio-mount.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
-
 sudo systemctl enable --now minio-compose.service
 sudo systemctl enable --now minio-mount.service
 
 # SAVING MINIO MOUNT DIR PATH
 touch minio_mount_dir.txt
 echo $MINIO_MOUNT_DIR > minio_mount_dir.txt
-
-rm -rf docker-compose.yaml

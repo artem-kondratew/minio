@@ -1,2 +1,5 @@
 data
 minio_mount_dir.txt
+.minio_credentials
+.minio_credentials_mount
+docker-compose.yaml
