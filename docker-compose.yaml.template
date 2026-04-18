@@ -2,19 +2,10 @@ services:
   minio:
     image: quay.io/minio/minio
     container_name: minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
+    network_mode: host
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: server /data --console-address ":9001"
     volumes:
       - {{MINIO_DATA_DIR}}:/data
-    networks:
-      vpn-net: {}
-
-networks:
-  vpn-net:
-    external: true
-

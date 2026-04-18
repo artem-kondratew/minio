@@ -73,3 +73,15 @@ journalctl -xeu minio-compose.service
 ```bash
 journalctl -xeu minio-mount.service
 ```
+
+## Step 4: Access MinIO
+
+Open the MinIO Console in your browser:
+
+```
+http://<host-ip>:9001
+```
+
+Log in with the username and password entered during installation.
+
+The S3 API is available at `http://<host-ip>:9000`.
